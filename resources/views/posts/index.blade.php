@@ -9,7 +9,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>Blog codepolitan</h1>
+        <h1>Blog App</h1>
         <a href="{{ url("posts/create") }}" class="btn btn-success">+ create</a>
         @foreach ($posts as $post)
         {{-- memisahkan kata dengan koma dan menjadi index array --}}

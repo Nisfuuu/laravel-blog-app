@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 class PostController extends Controller
@@ -47,28 +48,12 @@ class PostController extends Controller
         $title = $request->input('title');
         $content = $request->input('content');
 
-        // mengambil data dari post.txt
-        $posts = Storage::get('posts.txt');
-        // memisahkan data dengan enter dari file post.txt
-        $posts = explode("\n", $posts);
-
-        // menampung / membuat data baru
-        $new_post = [
-            count($posts) + 1,
-            $title,
-            $content,
-            date('Y-m-d H:i:s')
-        ];
-        // mengembalikan data array yang di pisah dengan koma menjadi satu seperti awal
-        $new_post = implode(',', $new_post);
-
-        // menambahkan data ke dalam array dengan push
-        array_push($posts, $new_post);
-        // mengembalikan array dengan pemisah enter menjadi string seperti semula
-        $posts = implode("\n", $posts);
-
-        // menambahkan data yang telah di buat ke dalam file post.txt
-        Storage::write('posts.txt', $posts);
+        DB::table('posts')->insert([
+            'title' => $title,
+            'content' => $content,
+            'created_at' => date('Y-m-d H:i:s'),
+            'updated_at' => date('Y-m-d H:i:s'),
+        ]);
 
         // mengembalikan ke halaman post ketika sudah di create
         return redirect('posts');
