@@ -21,11 +21,14 @@ Route::get('/', function () {
 
 // Route::get('hello', App\Http\Controllers\Hallocontrollers@index);
 
-Route::get('helo', [Hallocontrollers::class, 'index']);
-Route::post('helo', [Hallocontrollers::class, 'index']);
-Route::get('world', [Hallocontrollers::class, 'world_mesagge']);
+// Route::get('helo', [Hallocontrollers::class, 'index']);
+// Route::post('helo', [Hallocontrollers::class, 'index']);
+// Route::get('world', [Hallocontrollers::class, 'world_mesagge']);
 
 Route::get('posts', [PostController::class, 'index']);
 Route::get('posts/create', [PostController::class, 'create']);
 Route::get('posts/{id}', [PostController::class, 'show']);
 Route::post('posts', [PostController::class, 'store']);
+Route::get('posts/{id}/edit', [PostController::class, 'edit']);
+Route::patch('posts/{id}', [PostController::class, 'update']);
+Route::delete('posts/{id}', [PostController::class, 'destroy']);

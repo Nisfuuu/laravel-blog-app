@@ -16,14 +16,16 @@ class PostController extends Controller
     public function index()
 
     {
+        // membaca data dari mysql
+        $posts = DB::table('posts')->select('id', 'title', 'content', 'created_at', 'updated_at')
+            ->get();
 
-        $posts = Storage::get('posts.txt');
-        $posts = explode("\n", $posts);
-
-        $data = [
+        // semua data yang ada di mysql table posts dimasukan ke dalam variable $data
+        $datas = [
             'posts' => $posts
         ];
-        return view('posts.index', $data);
+
+        return view('posts.index', $datas);
     }
 
     /**
@@ -48,6 +50,7 @@ class PostController extends Controller
         $title = $request->input('title');
         $content = $request->input('content');
 
+        // menambahkan data ke mysql ketika mengisi form
         DB::table('posts')->insert([
             'title' => $title,
             'content' => $content,
@@ -67,19 +70,17 @@ class PostController extends Controller
      */
     public function show($id)
     {
-        $posts = Storage::get('posts.txt');
-        $posts = explode("\n", $posts);
-        $selected_post = array();
-        foreach ($posts as $post) {
-            $post = explode(",", $post);
-            if ($post[0] == $id) {
-                $selected_post = $post;
-            }
-        }
+        // baca data dari mysql dan where akan melakukan filtering yg di inginkan user dan method first menampilkan data yang pertamakali
+        $post = DB::table('posts')->select('id', 'title', 'content', 'created_at', 'updated_at')
+            ->where('id', '=', $id)->first();
 
+
+
+        // tampung semua data
         $view_data = [
-            'post' => $selected_post
+            'post' => $post
         ];
+
         return view('posts.show', $view_data);
     }
 
@@ -91,7 +92,18 @@ class PostController extends Controller
      */
     public function edit($id)
     {
-        //
+        // baca data dari mysql dan where akan melakukan filtering yg di inginkan user dan method first menampilkan data yang pertamakali
+        $post = DB::table('posts')->select('id', 'title', 'content', 'created_at', 'updated_at')
+            ->where('id', '=', $id)->first();
+
+
+
+        // tampung semua data
+        $view_data = [
+            'post' => $post
+        ];
+
+        return view('posts.edit', $view_data);
     }
 
     /**
@@ -103,7 +115,20 @@ class PostController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+
+        // menampung name="title" dan name="content" file create di dalam form ke variabel
+        $title = $request->input('title');
+        $content = $request->input('content');
+
+        // mengupdate data bedasarkan id ketika user mengklik button form
+        DB::table('posts')
+            ->where('id', $id) //key & value (default ==)
+            ->update([
+                'title' => $title,
+                'content' => $content,
+                'updated_at' => date('Y-m-d H:i:s'),
+            ]);
+        return redirect("posts/{$id}");
     }
 
     /**
@@ -114,6 +139,9 @@ class PostController extends Controller
      */
     public function destroy($id)
     {
-        //
+        DB::table('posts')
+            ->where('id', $id)
+            ->delete();
+        return redirect("posts");
     }
 }
