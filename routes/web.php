@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Hallocontrollers;
 use App\Http\Controllers\PostController;
 use Illuminate\Support\Facades\Route;
@@ -25,10 +26,17 @@ Route::get('/', function () {
 // Route::post('helo', [Hallocontrollers::class, 'index']);
 // Route::get('world', [Hallocontrollers::class, 'world_mesagge']);
 
+Route::get('login', [AuthController::class, 'login']);
+Route::post('login', [AuthController::class, 'authenticate']);
+Route::get('logout', [AuthController::class, 'logout']);
+Route::get('register', [AuthController::class, 'register_form']);
+Route::post('register', [AuthController::class, 'register']);
+
+
 Route::get('posts', [PostController::class, 'index']);
 Route::get('posts/create', [PostController::class, 'create']);
 Route::get('posts/{id}', [PostController::class, 'show']);
-Route::post('posts', [PostController::class, 'store']);
 Route::get('posts/{id}/edit', [PostController::class, 'edit']);
+Route::post('posts', [PostController::class, 'store']);
 Route::patch('posts/{id}', [PostController::class, 'update']);
 Route::delete('posts/{id}', [PostController::class, 'destroy']);

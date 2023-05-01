@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Post;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 
@@ -17,6 +18,10 @@ class PostController extends Controller
     public function index()
 
     {
+        // jika user sudah loggin dia boleh mengakses if, jika belum arahkan ke halaman login
+        if (!Auth::check()) {
+            return redirect('login');
+        }
         // membaca data dari mysql
         $posts = Post::active()
             ->get();
@@ -36,6 +41,10 @@ class PostController extends Controller
      */
     public function create()
     {
+        // jika user sudah loggin dia boleh mengakses if, jika belum arahkan ke halaman login
+        if (!Auth::check()) {
+            return redirect('login');
+        }
         return view('posts.create');
     }
 
@@ -48,6 +57,10 @@ class PostController extends Controller
     public function store(Request $request)
     {
 
+        // jika user sudah loggin dia boleh mengakses if, jika belum arahkan ke halaman login
+        if (!Auth::check()) {
+            return redirect('login');
+        }
         // menampung name="title" dan name="content" file create di dalam form ke variabel
         $title = $request->input('title');
         $content = $request->input('content');
@@ -72,6 +85,10 @@ class PostController extends Controller
      */
     public function show($id)
     {
+        // jika user sudah loggin dia boleh mengakses if, jika belum arahkan ke halaman login
+        if (!Auth::check()) {
+            return redirect('login');
+        }
         // baca data dari models ke mysql dan where akan melakukan filtering yg di inginkan user dan method first menampilkan data yang pertamakali
         $post = Post::where('id', $id)->first();
         $comments = $post->comments()->get();
@@ -95,6 +112,10 @@ class PostController extends Controller
      */
     public function edit($id)
     {
+        // jika user sudah loggin dia boleh mengakses if, jika belum arahkan ke halaman login
+        if (!Auth::check()) {
+            return redirect('login');
+        }
         // baca data dari models ke mysql dan where akan melakukan filtering yg di inginkan user dan method first menampilkan data yang pertamakali
         $post = Post::where('id', $id)->first();
 
@@ -118,6 +139,10 @@ class PostController extends Controller
     public function update(Request $request, $id)
     {
 
+        // jika user sudah loggin dia boleh mengakses if, jika belum arahkan ke halaman login
+        if (!Auth::check()) {
+            return redirect('login');
+        }
         // menampung name="title" dan name="content" file create di dalam form ke variabel
         $title = $request->input('title');
         $content = $request->input('content');
@@ -140,6 +165,10 @@ class PostController extends Controller
      */
     public function destroy($id)
     {
+        // jika user sudah loggin dia boleh mengakses if, jika belum arahkan ke halaman login
+        if (!Auth::check()) {
+            return redirect('login');
+        }
         Post::where('id', $id)
             ->delete();
         return redirect("posts");
