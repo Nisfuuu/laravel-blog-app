@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Storage;
+
 
 class PostController extends Controller
 {
@@ -17,7 +18,7 @@ class PostController extends Controller
 
     {
         // membaca data dari mysql
-        $posts = DB::table('posts')->select('id', 'title', 'content', 'created_at', 'updated_at')
+        $posts = Post::active()
             ->get();
 
         // semua data yang ada di mysql table posts dimasukan ke dalam variable $data
@@ -46,16 +47,17 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
+
         // menampung name="title" dan name="content" file create di dalam form ke variabel
         $title = $request->input('title');
         $content = $request->input('content');
 
         // menambahkan data ke mysql ketika mengisi form
-        DB::table('posts')->insert([
+        Post::create([
             'title' => $title,
             'content' => $content,
-            'created_at' => date('Y-m-d H:i:s'),
-            'updated_at' => date('Y-m-d H:i:s'),
+            'active' => true,
+
         ]);
 
         // mengembalikan ke halaman post ketika sudah di create
@@ -70,15 +72,16 @@ class PostController extends Controller
      */
     public function show($id)
     {
-        // baca data dari mysql dan where akan melakukan filtering yg di inginkan user dan method first menampilkan data yang pertamakali
-        $post = DB::table('posts')->select('id', 'title', 'content', 'created_at', 'updated_at')
-            ->where('id', '=', $id)->first();
-
-
+        // baca data dari models ke mysql dan where akan melakukan filtering yg di inginkan user dan method first menampilkan data yang pertamakali
+        $post = Post::where('id', $id)->first();
+        $comments = $post->comments()->get();
+        $total_comments = $post->total_comments();
 
         // tampung semua data
         $view_data = [
-            'post' => $post
+            'post' => $post,
+            'comments' => $comments,
+            'total_comments' => $total_comments,
         ];
 
         return view('posts.show', $view_data);
@@ -92,9 +95,8 @@ class PostController extends Controller
      */
     public function edit($id)
     {
-        // baca data dari mysql dan where akan melakukan filtering yg di inginkan user dan method first menampilkan data yang pertamakali
-        $post = DB::table('posts')->select('id', 'title', 'content', 'created_at', 'updated_at')
-            ->where('id', '=', $id)->first();
+        // baca data dari models ke mysql dan where akan melakukan filtering yg di inginkan user dan method first menampilkan data yang pertamakali
+        $post = Post::where('id', $id)->first();
 
 
 
@@ -121,8 +123,7 @@ class PostController extends Controller
         $content = $request->input('content');
 
         // mengupdate data bedasarkan id ketika user mengklik button form
-        DB::table('posts')
-            ->where('id', $id) //key & value (default ==)
+        Post::where('id', $id) //key & value (default ==)
             ->update([
                 'title' => $title,
                 'content' => $content,
@@ -139,8 +140,7 @@ class PostController extends Controller
      */
     public function destroy($id)
     {
-        DB::table('posts')
-            ->where('id', $id)
+        Post::where('id', $id)
             ->delete();
         return redirect("posts");
     }
