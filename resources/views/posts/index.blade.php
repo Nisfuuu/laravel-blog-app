@@ -4,7 +4,7 @@
 
 @section('content')
         <h1>Blog App</h1>
-        <a href="{{ url("posts/create") }}" class="btn btn-success">+ create</a>
+        <a href="{{ url("posts/create") }}" class="btn btn-success mb-2">+ create</a>
         @foreach ($posts as $post)
         {{-- memisahkan kata dengan koma dan menjadi index array --}}
 

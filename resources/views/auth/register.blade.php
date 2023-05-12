@@ -23,7 +23,7 @@
 
                 <div class="mb-3">
                     <label for="name" class="form-label">Name</label>
-                    <input type="text" class="gorm-control" id="name" name="name">
+                    <input type="text" class="form-control" id="name" name="name">
                     {{-- menampikan error pada name --}}
                     @if ($errors->has('name'))
                     <span class="text-danger">{{ $errors->first('name') }}</span>
@@ -31,7 +31,7 @@
                 </div>
                 <div class="mb-3">
                     <label for="email" class="form-label">Email</label>
-                    <input type="email" class="gorm-control" id="email" name="email">
+                    <input type="email" class="form-control" id="email" name="email">
                     @if ($errors->has('name'))
                     <span class="text-danger">{{ $errors->first('email') }}</span>
                     @endif
@@ -47,10 +47,10 @@
                     <label for="password" class="form-label">Konfirmasi Password</label>
                     <input type="password" class="form-control" id="password" name="password_confirmation">
                 </div>
-        </div>
-        <div class="mb-3">
-            <button type="submit" class="btn btn-primary">
-                Daftar
+                <div class="mb-3">
+                    <button type="submit" class="btn btn-primary">
+                        Daftar
+                </div>
         </div>
 
         </form>
